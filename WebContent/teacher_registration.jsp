@@ -1,3 +1,4 @@
+<%@page import="college_system.Admin"%>
 <%@page import="java.util.Map"%>
 <%@page import="database.Database"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -21,6 +22,13 @@ response.setHeader("Expires", "0"); //proxies %>
 <%Database db = (Database)application.getAttribute("dob");
 Map<Integer,String> m = db.getDepartment();
 
+%>
+<%
+ Admin ad = (Admin)session.getAttribute("detail");
+if(ad == null){ 
+	response.sendRedirect("admin_login.jsp");
+	}
+	
 %>
 <form action="Teacher_registration">
 <label for="name">Name:</label>
