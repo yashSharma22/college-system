@@ -1,5 +1,5 @@
-<%@page import="college_system.Teacher"%>
 <%@page import="java.util.Map"%>
+<%@page import="college_system.Teacher"%>
 <%@page import="database.Database"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -14,7 +14,7 @@
 response.setHeader("Pragma", "no-cache"); //http1.0
 response.setHeader("Expires", "0"); //proxies %>
 <%Database db = (Database)application.getAttribute("dob");
-Map<Integer,String> m = db.getDepartment();
+Map<Integer,String> m = db.getExamIdName();
 %>
 <%
  Teacher te = (Teacher)session.getAttribute("tdetail");
@@ -23,29 +23,33 @@ if(te == null){
 }
 
 %>
-<form action="Create_exam">
-<label>Exam name: </label>
-<input type="text" name="examName"><br><br>
-<label>Date</label>
-<input type="date" name="date"><br><br>
-<label>Start Time:</label>
-<input type="time" name="time"><br><br>
-<label>Exam Duration time</label>
-<input type="number" name="dtime"><br><br>
-<label>Department</label>
-<select name="deptid"><% for(Map.Entry<Integer,String> mp: m.entrySet())
+<form action="Add_question" method="post">
+<select name="examid"><% for(Map.Entry<Integer,String> mp: m.entrySet())
 	{%>
 		 <option value="<%=mp.getKey() %>"><%=mp.getValue() %></option>
 	<% }%>
 	
 </select><br><br>
-<label>No. of question</label>
-<input type="number" name="noOfQues"><br><br>
-<label>Positive marking:</label>
-<input type="number" name="pmarks"><br><br>
-<label>Negative marking:</label>
-<input type="number" name="nmarks"><br><br>
-<button type="submit">submit</button><br><br>
+<textarea row="2"  name="ques"></textarea><br>
+<label>Option 1</label>
+<input type="text" name="op1"><br>
+<label>Option 2</label>
+
+<input type="text" name="op2"><br>
+<label>Option 3</label>
+
+<input type="text" name="op3"><br>
+<label>Option 4</label>
+
+<input type="text" name="op4"><br>
+<label>choose correct option</label>
+<select name="coption">
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+</select>
+<button type="submit">submit</button>
 </form>
 </body>
 </html>

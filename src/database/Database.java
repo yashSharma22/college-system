@@ -4,16 +4,19 @@ package database;
 
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 import college_system.Admin;
+import college_system.Exam;
 import college_system.Fee;
+import college_system.Question;
 import college_system.Student;
 import college_system.Teacher;
 public class Database {
 	private static final int NULL = 0;
 	private Connection con = null;
 	private PreparedStatement st;
-	private ResultSet rs,rt,rw;
+	private ResultSet rs;
 
 	public Database() {
 		try {
@@ -86,6 +89,7 @@ public class Database {
 		tables.put("teacher","(t_id int NOT NULL AUTO_INCREMENT,name varchar(20) NOT NULL,email varchar(20) NOT NULL,password varchar(20) NOT NULL,mobileno varchar(10) NOT NULL,d_id int NOT NULL,PRIMARY KEY(t_id),FOREIGN KEY (d_id) REFERENCES department(d_id)) AUTO_INCREMENT=2001");
 		tables.put("student","(s_id int NOT NULL AUTO_INCREMENT,name varchar(20) NOT NULL,password varchar(20) NOT NULL,email varchar(20) NOT NULL,mobileno varchar(10) NOT NULL,gender varchar(10) NOT NULL,DOB varchar(10) NOT NULL,tenthpercentage int(10) NOT NULL,twelfthpercentage int(10) NOT NULL,d_id int NOT NULL,PRIMARY KEY(s_id),FOREIGN KEY (d_id) REFERENCES department(d_id)) AUTO_INCREMENT=3001");
 		tables.put("feeadmin","(f_id int NOT NULL, password varchar(20),name varchar(20) NOT NULL,PRIMARY KEY(f_id))");
+		tables.put("exam", "(e_id int NOT NULL AUTO_INCREMENT,examName varchar(10) NOt NULL,d_id int NOT NULL,date DATE NOT NULL,time TIME NOT NULL,noOfQues int NOT NULL,pmarks int NOT NULL,nmarks int NOT NULL,duration_time int NOT NULL,PRIMARY KEY(e_id),FOREIGN KEY (d_id) REFERENCES department(d_id)) AUTO_INCREMENT=4001");
 		ArrayList<String> dbtables = getDatabaseTables();
 
 		
@@ -169,6 +173,20 @@ public class Database {
 		}
 		return m;
 	}
+	public Map<Integer,String> getExamIdName(){
+		Map<Integer,String> m = new HashMap<Integer, String>();
+		try {
+			st = con.prepareStatement("select * from exam");
+			rs = st.executeQuery();
+			while(rs.next()){
+				m.put(rs.getInt(1), rs.getString(2));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return m;
+	}
 	public boolean addTeacher(Teacher t) {
 		try {
 			st = con.prepareStatement("insert into teacher values(?,?,?,?,?,?)");
@@ -180,11 +198,12 @@ public class Database {
 			st.setInt(6, t.getDeptid());
 			st.executeUpdate();
 			System.out.println("teacher data entered");
+			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		return true;
+		return false;
 		// TODO Auto-generated method stub
 		
 	}
@@ -263,6 +282,8 @@ public class Database {
 		try {
 			stu.setSid(rs.getInt(1));
 			stu.setName(rs.getString(2));
+			stu.setEmail(rs.getString(4));
+			stu.setDeptid(rs.getInt(10));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -301,7 +322,138 @@ public class Database {
 		// TODO Auto-generated method stub
 		return fe;
 	}
+	public boolean addExam(Exam ex) {
+		try {
+			st = con.prepareStatement("insert into exam values(?,?,?,?,?,?,?,?,?)");
+			st.setInt(1, NULL);
+			st.setString(2, ex.getExamName());
+			st.setInt(3, ex.getDeptid());
+			st.setDate(4, ex.getDate());
+			st.setTime(5, ex.getTime());
+			st.setInt(6, ex.getNoOfQues());
+			st.setInt(7,ex.getPmarks());
+			st.setInt(8, ex.getNmarks());
+			st.setInt(9, ex.getDtime());
+			st.executeUpdate();
+			System.out.println("exam data entered");
+			st= con.prepareStatement("select max(e_id) from exam");
+			rs=st.executeQuery();
+			rs.next();
+			createTables("exques"+rs.getInt(1),"(id int AUTO_INCREMENT NOT NULL,ques varchar(1000),op1 varchar(100),op2 varchar(100),op3 varchar(100),op4 varchar(100),coption int,PRIMARY KEY(id))");
+			System.out.println("exam question table created");
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
-	
-	
+	public boolean addQues(int exid,Question q) {
+		try {
+			st= con.prepareStatement("insert into exques"+exid+" values(?,?,?,?,?,?,?)");
+			st.setInt(1,NULL);
+			st.setString(2,q.getQues());
+			st.setString(3, q.getOp1());
+			st.setString(4, q.getOp2());
+			st.setString(5, q.getOp3());
+			st.setString(6, q.getOp4());
+			st.setInt(7, q.getCoption());
+			
+			st.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	public ArrayList<Exam> getOnlineExamLinks(int did){
+		ArrayList<Exam> lx = new ArrayList<Exam>();
+		Date dt = null;
+		Time tt = null;
+		java.sql.Date ds = null;
+		try {
+			 dt = new Date();
+			 ds= new java.sql.Date(dt.getTime());
+			tt = new Time(dt.getTime());
+			st = con.prepareStatement("select * from exam where date=? and time<=? and d_id=?");
+			st.setDate(1, ds);
+			st.setTime(2, tt);
+			st.setInt(3, did);
+			System.out.println(did);
+			rs = st.executeQuery();
+			while(rs.next()) {
+				Exam ex = new Exam();
+				ex.setExamName(rs.getString(2));
+				ex.setDtime(rs.getInt(9));
+				ex.setNoOfQues(rs.getInt(6));
+			ex.setExamid(rs.getInt(1));
+			lx.add(ex);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return lx;
+	}
+	public Exam getOnlineExamDetails(int eid) {
+		Exam e = new Exam();
+		try {
+			
+			st=con.prepareStatement("select * from exam where e_id=?");
+			st.setInt(1, eid);
+			rs=st.executeQuery();
+			rs.next();
+			e.setExamid(rs.getInt(1));
+			e.setExamName(rs.getString(2));
+			e.setDeptid(rs.getInt(3));
+			e.setDate(rs.getDate(4));
+			e.setTime(rs.getTime(5));
+			e.setNoOfQues(rs.getInt(6));
+			e.setPmarks(rs.getInt(7));
+			e.setNmarks(rs.getInt(8));
+			e.setDtime(rs.getInt(9));
+		} catch (SQLException l) {
+			// TODO Auto-generated catch block
+			l.printStackTrace();
+		}
+		return e;
+		
+	}
+	//it gets all the question from database
+	public ArrayList<Question> getAllQuestion(int eid) {
+		ArrayList<Question> aq = new ArrayList<Question>();
+		try {
+			rs=con.prepareStatement("select * from exques"+eid).executeQuery();
+			while(rs.next()) {
+				Question q= new Question();
+				q.setQues(rs.getString(2));
+				q.setCoption(rs.getInt(7));
+				q.setOp1(rs.getString(3));
+				q.setOp2(rs.getString(4));
+				q.setOp3(rs.getString(5));
+				q.setOp4(rs.getString(6));
+				aq.add(q);
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return aq;
+
+	}
+	//it fetch the question from database for online exam and return a arraylist
+	public ArrayList<Question> getExamQuestion(Exam e){
+		ArrayList<Question> dbques = getAllQuestion(e.getExamid());
+		ArrayList<Question> examques = new ArrayList<Question>();
+		for(int i=0;i<e.getNoOfQues();i++) {
+			int rno = (int) (dbques.size()*Math.random());
+			examques.add(dbques.get(rno));
+			dbques.remove(rno);
+			
+		}
+		return examques;
+	}
 }

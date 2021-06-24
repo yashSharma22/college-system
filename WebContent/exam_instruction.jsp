@@ -1,7 +1,7 @@
+<%@page import="college_system.Student"%>
 <%@page import="college_system.Exam"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="database.Database"%>
-<%@page import="college_system.Student"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -25,24 +25,23 @@ else
  %>
  <%
  Database db = (Database)application.getAttribute("dob");
- ArrayList<Exam> lx = db.getOnlineExamLinks(stu.getDeptid());
+ int eid = Integer.parseInt(request.getParameter("eid"));
+ Exam ex= db.getOnlineExamDetails(eid);
  %>
- <table>
- <tr>
- <th>Exam NAME</th>
- <th>No. Question</th>
- <th>Time Duration</th>
- </tr>
- <%for(Exam e:lx){ %>
- 	<tr>
- 	<td><a href="exam_instruction.jsp?eid=<%= e.getExamid()%>"><%=e.getExamName() %></a></td>
- 	<td><%=e.getNoOfQues() %>
- 	<td><%=e.getDtime() %><td>
- 	<tr>
- <% } %>
- </table> 
-<form action="Student_logout">
-<button type="submit">Logout</button>
-</form>
+ <%=ex.getExamName() %><br>
+  <%=ex.getNoOfQues() %><br>
+   <%=ex.getDeptid() %><br>
+	 <%=ex.getDtime() %><br>
+	  <%=ex.getDate()%><br>
+	   <%=ex.getTime() %><br>
+	   <%=ex.getDtime() %><br>
+	    <%=ex.getPmarks()%><br>
+	     <%=ex.getNmarks() %><br>
+	    
+	   <%session.setAttribute("examdetails", ex); %>
+	  <a href="Prepare_onlineexam">start exam</a>
+	 
+	  
+ 
 </body>
 </html>
