@@ -24,6 +24,7 @@ else
 	response.sendRedirect("teacher_login.jsp");
 %>
 <a href="create_exam.jsp">CREATE EXAM</a>
+<a href="add_question.jsp">ADD QUESTION</a>
 <form action="Teacherlogout" >
 <button type="submit">Logout</button>
 </form>
