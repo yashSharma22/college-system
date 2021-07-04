@@ -87,9 +87,10 @@ public class Database {
 		tables.put("admin","(a_id int NOT NULL, password varchar(20),name varchar(20) NOT NULL,PRIMARY KEY(a_id))");
 		tables.put("department","(d_id int NOT NULL AUTO_INCREMENT,name varchar(20) NOT NULL ,PRIMARY KEY(d_id)) AUTO_INCREMENT=1001");
 		tables.put("teacher","(t_id int NOT NULL AUTO_INCREMENT,name varchar(20) NOT NULL,email varchar(20) NOT NULL,password varchar(20) NOT NULL,mobileno varchar(10) NOT NULL,d_id int NOT NULL,PRIMARY KEY(t_id),FOREIGN KEY (d_id) REFERENCES department(d_id)) AUTO_INCREMENT=2001");
-		tables.put("student","(s_id int NOT NULL AUTO_INCREMENT,name varchar(20) NOT NULL,password varchar(20) NOT NULL,email varchar(20) NOT NULL,mobileno varchar(10) NOT NULL,gender varchar(10) NOT NULL,DOB varchar(10) NOT NULL,tenthpercentage int(10) NOT NULL,twelfthpercentage int(10) NOT NULL,d_id int NOT NULL,PRIMARY KEY(s_id),FOREIGN KEY (d_id) REFERENCES department(d_id)) AUTO_INCREMENT=3001");
+		tables.put("student","(s_id int NOT NULL AUTO_INCREMENT,name varchar(20) NOT NULL,password varchar(20) NOT NULL,email varchar(20) NOT NULL,mobileno varchar(10) NOT NULL,gender varchar(10) NOT NULL,DOB varchar(10) NOT NULL,tenthpercentage int(10) NOT NULL,twelfthpercentage int(10) NOT NULL,d_id int NOT NULL,totalfee int,submitedfee int,PRIMARY KEY(s_id),FOREIGN KEY (d_id) REFERENCES department(d_id)) AUTO_INCREMENT=3001");
 		tables.put("feeadmin","(f_id int NOT NULL, password varchar(20),name varchar(20) NOT NULL,PRIMARY KEY(f_id))");
 		tables.put("exam", "(e_id int NOT NULL AUTO_INCREMENT,examName varchar(10) NOt NULL,d_id int NOT NULL,date DATE NOT NULL,time TIME NOT NULL,noOfQues int NOT NULL,pmarks int NOT NULL,nmarks int NOT NULL,duration_time int NOT NULL,PRIMARY KEY(e_id),FOREIGN KEY (d_id) REFERENCES department(d_id)) AUTO_INCREMENT=4001");
+		tables.put("result","(s_id int NOT NULL,noOfCorrectQues int NOT NULL,noOfIncorrectQues int NOT NULL,e_id int NOT NULL,FOREIGN KEY(e_id) REFERENCES exam(e_id))");
 		ArrayList<String> dbtables = getDatabaseTables();
 
 		
@@ -241,7 +242,7 @@ public class Database {
 	public boolean addStudent(Student stu) {
 		// TODO Auto-generated method stub
 		try {
-			st = con.prepareStatement("insert into Student values(?,?,?,?,?,?,?,?,?,?)");
+			st = con.prepareStatement("insert into Student values(?,?,?,?,?,?,?,?,?,?,?,?)");
 			st.setInt(1,NULL);
 			st.setString(2,stu.getName());
 			st.setString(3, stu.getPassword());
@@ -252,6 +253,8 @@ public class Database {
 			st.setInt(8,stu.getTenth());
 			st.setInt(9,stu.getTwelfth() );
 			st.setInt(10,stu.getDeptid());
+			st.setInt(11, 100000);
+			st.setInt(12, 0);
 			st.executeUpdate();
 			return true;
 		} catch (SQLException e) {
@@ -260,7 +263,7 @@ public class Database {
 		}
 		return false;
 	}
-	public boolean studentlogin(String email, String pass) {
+	public int studentlogin(String email, String pass) {
 		// TODO Auto-generated method stub
 		try {
 			st= con.prepareStatement("select * from student where email=? and password=?");
@@ -268,22 +271,36 @@ public class Database {
 			st.setString(2, pass);
 			rs = st.executeQuery();
 			if(rs.next()) {
-				return true;
+				return rs.getInt(1);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return false;
+		return 0;
 	}
-	public Student studentDetail() {
+	
+	public Student studentDetail(int sid) {
 		// TODO Auto-generated method stub
+		
 		Student stu = new Student();
 		try {
+			st= con.prepareStatement("select * from student where s_id=?");
+			st.setInt(1, sid);
+			rs=st.executeQuery();
+			rs.next();
 			stu.setSid(rs.getInt(1));
 			stu.setName(rs.getString(2));
 			stu.setEmail(rs.getString(4));
+			stu.setMobno(rs.getString(5));
+			stu.setGender(rs.getString(6));
+			stu.setDob(rs.getString(7));
+			stu.setTenth(rs.getInt(8));
+			stu.setTwelfth(rs.getInt(9));
 			stu.setDeptid(rs.getInt(10));
+			stu.setTotalfees(rs.getInt(11));
+			stu.setSubmitedfees(rs.getInt(12));
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -429,6 +446,7 @@ public class Database {
 			rs=con.prepareStatement("select * from exques"+eid).executeQuery();
 			while(rs.next()) {
 				Question q= new Question();
+				q.setQid(rs.getInt(1));
 				q.setQues(rs.getString(2));
 				q.setCoption(rs.getInt(7));
 				q.setOp1(rs.getString(3));
@@ -455,5 +473,98 @@ public class Database {
 			
 		}
 		return examques;
+	}
+	public boolean saveResult(int s_id,int e_id,int crrans,int incrrans) {
+		try {
+			st=con.prepareStatement("insert into result values(?,?,?,?)");
+			st.setInt(1, s_id);
+			st.setInt(2,crrans);
+			st.setInt(3, incrrans);
+			st.setInt(4,e_id);
+			st.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	public ResultSet selectExam() {
+		try {
+			st = con.prepareStatement("select * from exam");
+			rs=st.executeQuery();
+			//return rs;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rs;
+	}
+	public boolean updateExam(Exam ex) {
+		try {
+			st = con.prepareStatement("update exam set examName=?,d_id=?,date=?,time=?,noOfQues=?,pmarks=?,nmarks=?,duration_time=? where e_id=? ");
+			st.setString(1, ex.getExamName());
+			st.setInt(2, ex.getDeptid());
+			st.setDate(3, ex.getDate());
+			st.setTime(4, ex.getTime());
+			st.setInt(5, ex.getNoOfQues());
+			st.setInt(6,ex.getPmarks());
+			st.setInt(7, ex.getNmarks());
+			st.setInt(8, ex.getDtime());
+			st.setInt(9, ex.getExamid());
+
+			st.executeUpdate();
+			
+			
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	public boolean updateQues(int examId, Question q) {
+		try {
+			st= con.prepareStatement("update exques"+examId+" set ques=?,op1=?,op2=?,op3=?,op4=?,coption=? where id=? ");
+		//	st.setInt(1,NULL);
+			st.setString(1,q.getQues());
+			st.setString(2, q.getOp1());
+			st.setString(3, q.getOp2());
+			st.setString(4, q.getOp3());
+			st.setString(5, q.getOp4());
+			st.setInt(6, q.getCoption());
+			st.setInt(7, q.getQid());
+			
+			st.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	public boolean deleteQuestio(int examid, int qid) {
+		try {
+			st= con.prepareStatement("delete from exques"+examid+" where id="+qid);
+			st.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	public boolean feesubmit(int amount, int sid) {
+		try {
+			st= con.prepareStatement("update student set submitedfee=? where s_id=?");
+			st.setInt(1, amount);
+			st.setInt(2, sid);
+			st.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

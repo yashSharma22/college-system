@@ -29,6 +29,7 @@ public class Add_question extends HttpServlet {
 		Database db = (Database)sc.getAttribute("dob");
 	 if(db.addQues(Integer.parseInt(request.getParameter("examid")), q)) {
 		 System.out.println("question add");
+		response.getWriter().print("<a href=\"add_question.jsp\">add more question</a>");
 	 }
 	}
 

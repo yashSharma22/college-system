@@ -1,3 +1,4 @@
+<%@page import="database.Database"%>
 <%@page import="college_system.Fee"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -15,14 +16,19 @@ response.setHeader("Expires", "0"); //proxies
 %>
 <%
  Fee fe = (Fee)session.getAttribute("fdetail");
-if(fe!=null){ %>
-welcome <%=fe.getFid() %> ! How are You ?
-login sucessfully!
-<br><br>
-	<%}
-else
+if(fe==null){ 
 	response.sendRedirect("feeadmin_login.jsp");
+}
 %>
+<%
+Database db = (Database)application.getAttribute("dob");
+
+%>
+<form action="feestudent_submit.jsp" >
+Enter student id: <input type="number" placeholder="Enter student id" name="fsid"><br>
+<button type="submit">submit</button>
+</form>
+
 
 <form action="Feeadmin_logout">
 

@@ -1,3 +1,8 @@
+<%@page import="college_system.Question"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="college_system.Exam"%>
+<%@page import="database.Database"%>
+<%@page import="college_system.Student"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -18,6 +23,21 @@
 </head>
 
 <body>
+<%
+response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); //http 1.1
+response.setHeader("Pragma", "no-cache"); //http1.0
+response.setHeader("Expires", "0"); //proxies
+%>
+<%Student stu = (Student)session.getAttribute("sdetail");
+if(stu==null){
+
+response.sendRedirect("student_login.jsp");
+} %>
+<%
+Exam ex= (Exam)session.getAttribute("examdetails");
+ArrayList<Question> aq = (ArrayList<Question>)session.getAttribute("examques");
+%>
+
     <script type="text/javascript">
         var currentQues = 1;
     </script>
@@ -38,10 +58,10 @@
     <main>
         <div class="container-fluid">
             <div class="row text-center shadow-sm mt-2 mx-1 py-3 border">
-                <div class="col fw-bold fs-4"><span>Exam Name: </span></div>
-                <div class="col fw-bold fs-4"><span>Total Marks: </span></div>
-                <div class="col fw-bold fs-4"><span>Positive Marking: </span></div>
-                <div class="col fw-bold fs-4"><span>Negative Marking: </span></div>
+                <div class="col fw-bold fs-4"><span>Exam Name: <%=ex.getExamName() %> </span></div>
+                <div class="col fw-bold fs-4"><span>Total Marks: <%=ex.getNoOfQues()*ex.getPmarks() %></span></div>
+                <div class="col fw-bold fs-4"><span>Positive Marking: <%=ex.getPmarks() %> </span></div>
+                <div class="col fw-bold fs-4"><span>Negative Marking: <%=ex.getNmarks() %> </span></div>
             </div>
         </div>
 
@@ -100,11 +120,15 @@
                                 Submitted
                             </div>
                         </div>
-                        <form action="" method="post">
-                            
-                            <input type="hidden" name="user-answers" id="ans1"/>
-                            <a id="qBtn1" onclick="gotoQuestiontion(1)" class="btn border shadow-sm btn-light">1</a>
-    
+                        <form action="Save_result" method="post">
+                            <%for(int i=0;i<aq.size();i++){%>
+                             <input type="hidden" name="user-answers" id="ans<%= i+1%>"/>
+                            <a id="qBtn<%= i+1%>" onclick="gotoQuestion(<%= i+1%>)" class="btn border shadow-sm btn-light"><%= i+1%></a>
+    	
+                           <% }
+                            %>
+                            		
+                           
                             <br>
                             <button id="submitbutton" type="submit" name="action"
                                 class="btn text-white mt-3"
@@ -137,14 +161,22 @@
                 this.status = status;
             }
             var questionList = [];
-            // questionList.push(new Question("<%= %>","<%= %>","<%= %>","<%= %>","<%= %>",<%= %>));
-            questionList.push(new Question("q1","1","2","3","4",0));
-            questionList.push(new Question("q2","1","2","3","4",0));
-            questionList.push(new Question("q3","1","2","3","4",0));
-            questionList.push(new Question("q4","1","2","3","4",0));
+            <%for(int i=0;i<aq.size();i++){
+            	 Question q = aq.get(i);
+            %>
+           
+            questionList.push(new Question("<%=q.getQues() %>","<%=q.getOp1() %>","<%=q.getOp2() %>","<%=q.getOp3() %>","<%=q.getOp4()%>",0));
             
+            <%
+            }%>
+            
+           
             function gotoQuestion(q)
             {
+            	if(q<1 || q><%= ex.getNoOfQues()%>) {
+            		
+            		return ;
+            	}
                 currentQues=q;
                 var e=document.getElementById("qBtn"+q);
                 if(questionList[q-1].status == 0)
@@ -179,22 +211,22 @@
          var op=document.getElementsByName("option");
          if(op[0].checked)
              {
-             document.getElementById("ans"+k).value=questionList[currentQues-1].op1;
+             document.getElementById("ans"+currentQues).value=1;
              changeOptionStatus();
              }
          else if(op[1].checked)
              {
-             document.getElementById("ans"+k).value=questionList[currentQues-1].op2;
+             document.getElementById("ans"+currentQues).value=2;
              changeOptionStatus();
              }
          else if(op[2].checked)
              {
-             document.getElementById("ans"+k).value=questionList[currentQues-1].op3;
+             document.getElementById("ans"+currentQues).value=3;
              changeOptionStatus();
              }
          else if(op[3].checked)
              {
-             document.getElementById("ans"+k).value=questionList[currentQues-1].op4;
+             document.getElementById("ans"+currentQues).value=4;
              changeOptionStatus();
              }
     }
@@ -203,16 +235,16 @@
         if(questionList[currentQues-1].status==1)
           {
               questionList[currentQues-1].status=2;
-              document.getElementById("qBtn"+k).classList.replace("btn-danger","btn-success");
+              document.getElementById("qBtn"+currentQues).classList.replace("btn-danger","btn-success");
           }
         var choice=document.getElementById("choice");
-           choice.innerHTML="Your Choice :- "+document.getElementById("ans"+k).value;
+           choice.innerHTML="Your Choice :- "+document.getElementById("ans"+currentQues).value;
     }
 
     gotoQuestion(1);
 </script>
 <script type="text/javascript">
-    var time = 100;
+    var time = <%=ex.getDtime()*60 %>;
     
     function convertsec(s)
     {

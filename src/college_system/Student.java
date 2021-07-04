@@ -2,9 +2,21 @@ package college_system;
 
 public class Student {
  String name,password,email,gender,dob,mobno;
- int sid,deptid,tenth,twelfth;
+ int sid,deptid,tenth,twelfth,totalfees,submitedfees;
 public String getName() {
 	return name;
+}
+public int getTotalfees() {
+	return totalfees;
+}
+public void setTotalfees(int totalfees) {
+	this.totalfees = totalfees;
+}
+public int getSubmitedfees() {
+	return submitedfees;
+}
+public void setSubmitedfees(int submitedfees) {
+	this.submitedfees = submitedfees;
 }
 public void setName(String name) {
 	this.name = name;
