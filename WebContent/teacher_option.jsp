@@ -25,6 +25,8 @@ else
 %>
 <a href="create_exam.jsp">CREATE EXAM</a>
 <a href="add_question.jsp">ADD QUESTION</a>
+<a href="view_question.jsp">VIEW QUESTION</a>
+
 <form action="Teacherlogout" >
 <button type="submit">Logout</button>
 </form>

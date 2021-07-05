@@ -1,0 +1,22 @@
+:root {
+    --themeColor1: #1b9ce7;
+    --themeColor2: #005380;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+nav {
+    background-image: linear-gradient(90deg, var(--themeColor1) 0%, var(--themeColor2) 100%);
+}
+
+footer {
+    background-color: var(--themeColor2);
+}

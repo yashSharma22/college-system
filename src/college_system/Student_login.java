@@ -25,8 +25,9 @@ public class Student_login extends HttpServlet {
 		pass=request.getParameter("pass");
 		ServletContext sc = getServletContext();
 		Database db = (Database)sc.getAttribute("dob");
-		if(db.studentlogin(email,pass)) {
-			Student stu= db.studentDetail();
+		int sid = db.studentlogin(email,pass);
+		if(sid!=0) {
+			Student stu= db.studentDetail(sid);
 			HttpSession sse = request.getSession();
 			sse.setAttribute("sdetail", stu);
 			response.sendRedirect("student_option.jsp");
