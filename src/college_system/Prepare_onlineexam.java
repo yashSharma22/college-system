@@ -29,6 +29,7 @@ public class Prepare_onlineexam extends HttpServlet {
 		}
 		Exam ex = (Exam) sse.getAttribute("examdetails");
 		ArrayList<Question> qal = db.getExamQuestion(ex);
+    
 		sse.setAttribute("examques", qal);//it set different ques for different student
 		response.sendRedirect("online_exam_quespage.jsp");
 	}

@@ -272,5 +272,4 @@ ArrayList<Question> aq = (ArrayList<Question>)session.getAttribute("examques");
     }
 </script>
 </body>
-
 </html>

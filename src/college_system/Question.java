@@ -1,6 +1,7 @@
 package college_system;
 
 public class Question {
+
 	private String ques,op1,op2,op3,op4;
 	int qid;
 	public int getQid() {
@@ -9,6 +10,7 @@ public class Question {
 	public void setQid(int qid) {
 		this.qid = qid;
 	}
+
 	private int coption;
 	
 	public String getQues() {

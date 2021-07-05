@@ -300,7 +300,7 @@ public class Database {
 			stu.setDeptid(rs.getInt(10));
 			stu.setTotalfees(rs.getInt(11));
 			stu.setSubmitedfees(rs.getInt(12));
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
