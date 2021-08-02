@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import database.Database;
+import database.Exam;
+import database.Question;
+import database.Student;
 
 /**
  * Servlet implementation class Prepare_onlineexam
@@ -20,17 +23,18 @@ import database.Database;
 public class Prepare_onlineexam extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession sse = request.getSession(false);//false se purane seddion ko check krta h 
-		Student st = (Student) sse.getAttribute("sdetail");
-		ServletContext sc = getServletContext();
-		Database db = (Database)sc.getAttribute("dob");
+		HttpSession se = request.getSession(false);//false se purane seddion ko check krta h 
+		Student st = (Student) se.getAttribute("sdetail");
 		if(st==null) {
 			response.sendRedirect("student_login.jsp");
+			return;
 		}
-		Exam ex = (Exam) sse.getAttribute("examdetails");
+		ServletContext sc = getServletContext();
+		Database db = (Database)sc.getAttribute("dob");
+		Exam ex = (Exam) se.getAttribute("examdetails");
 		ArrayList<Question> qal = db.getExamQuestion(ex);
     
-		sse.setAttribute("examques", qal);//it set different ques for different student
+		se.setAttribute("examques", qal);//it set different ques for different student
 		response.sendRedirect("online_exam_quespage.jsp");
 	}
 

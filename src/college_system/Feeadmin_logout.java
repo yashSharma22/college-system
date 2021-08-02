@@ -19,7 +19,7 @@ public class Feeadmin_logout extends HttpServlet {
 		HttpSession se=request.getSession(false);
 		se.removeAttribute("fdetail");
 		se.invalidate();
-		response.sendRedirect("feeadmin_login.jsp");
+		response.sendRedirect("index.jsp");
 	}
 
 

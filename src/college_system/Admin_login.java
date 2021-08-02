@@ -11,13 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import database.Admin;
 import database.Database;
 
 /**
  * Servlet implementation class Abc
  */
-@WebServlet("/Abc")
-public class Abc extends HttpServlet {
+@WebServlet("/Admin_login")
+public class Admin_login extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int aid = Integer.parseInt(request.getParameter("aid"));
@@ -31,7 +32,8 @@ public class Abc extends HttpServlet {
 			response.sendRedirect("admin_option.jsp");
 		}
 		else {
-			response.sendRedirect("index.jsp");
+			request.setAttribute("errMsg", "Invalid Credentials!");
+			request.getRequestDispatcher("admin_login.jsp").forward(request, response);
 		}
 		
 	}

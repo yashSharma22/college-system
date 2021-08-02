@@ -1,4 +1,4 @@
-package college_system;
+package database;
 
 public class Admin {
 	private int aid;

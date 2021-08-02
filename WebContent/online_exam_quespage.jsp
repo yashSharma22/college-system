@@ -1,157 +1,160 @@
-<%@page import="college_system.Question"%>
+<%@page import="database.Question"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="college_system.Exam"%>
+<%@page import="database.Exam"%>
 <%@page import="database.Database"%>
-<%@page import="college_system.Student"%>
+<%@page import="database.Student"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/online_Exam_Page.css">
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/online_Exam_Page.css">
 
-    <title>Hello, world!</title>
+<title>Hello, world!</title>
 </head>
 
 <body>
-<%
-response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); //http 1.1
-response.setHeader("Pragma", "no-cache"); //http1.0
-response.setHeader("Expires", "0"); //proxies
-%>
-<%Student stu = (Student)session.getAttribute("sdetail");
-if(stu==null){
+	<%
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); //http 1.1
+		response.setHeader("Pragma", "no-cache"); //http1.0
+		response.setHeader("Expires", "0"); //proxies
 
-response.sendRedirect("student_login.jsp");
-} %>
-<%
-Exam ex= (Exam)session.getAttribute("examdetails");
-ArrayList<Question> aq = (ArrayList<Question>)session.getAttribute("examques");
-%>
-
-    <script type="text/javascript">
+		Student stu = (Student) session.getAttribute("sdetail");
+		if (stu == null) {
+			response.sendRedirect("student_login.jsp");
+			return;
+		}
+		
+		Exam ex = (Exam) session.getAttribute("examdetails");
+		ArrayList<Question> aq = (ArrayList<Question>) session.getAttribute("examques");
+	%>
+	<%@ include file="partials/header.jsp"%>
+	
+	<script type="text/javascript">
         var currentQues = 1;
     </script>
-    <header>
-        <nav class="navbar navbar-light">
-            <div class="container-fluid">
-                <a class="navbar-brand ms-5" href="#">
-                    <h1 class="fw-bold text-white">MDEC</h1>
-                </a>
-                <div>
-                    <div class="fw-bold fs-4 text-white mx-5">
+	
+	<main>
+	<div class="container-fluid">
+		<div class="row text-center shadow-sm mt-2 mx-1 py-3 border">
+			<div class="col fw-bold fs-4">
+				<span>Exam Name: <%=ex.getExamName()%>
+				</span>
+			</div>
+			<div class="col fw-bold fs-4">
+				<span>Total Marks: <%=ex.getNoOfQues() * ex.getPmarks()%></span>
+			</div>
+			<div class="col fw-bold fs-4">
+				<span>Positive Marking: <%=ex.getPmarks()%>
+				</span>
+			</div>
+			<div class="col fw-bold fs-4">
+				<span>Negative Marking: <%=ex.getNmarks()%>
+				</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row mx-1 mt-3">
+			<div class="col-8 border p-4 shadow-sm">
+				<div class="ques fs-5">
+					Q<span id="questionNo">1</span>. <span id="question"></span>
+				</div>
+				<div class="option-container">
+					<div class="my-3">
+						1. <label> <input class="form-check-input" type="radio"
+							name="option" value="1" /> <span id="text-op1"></span>
+						</label>
+					</div>
+					<div class="my-3">
+						2. <label> <input class="form-check-input" type="radio"
+							name="option" value="2" /> <span id="text-op2"></span>
+						</label>
+					</div>
+					<div class="my-3">
+						3. <label> <input class="form-check-input" type="radio"
+							name="option" value="3" /> <span id="text-op3"></span>
+						</label>
+					</div>
+					<div class="my-3">
+						4. <label> <input class="form-check-input" type="radio"
+							name="option" value="4" /> <span id="text-op4"></span>
+						</label>
+					</div>
+				</div>
+				<div class="row text-center mb-4">
+					<div class="col">
+						<a onclick="saveAnswer()" class="btn btn-primary">Save</a>
+					</div>
+					<div class="col">
+						<a onclick="gotoQuestion(currentQues-1)" class="btn btn-primary">Previous</a>
+					</div>
+					<div class="col">
+						<a onclick="gotoQuestion(currentQues+1)" class="btn btn-primary">Next</a>
+					</div>
+				</div>
+				<div class="fw-bold mb-5" id="choice"></div>
+			</div>
+			<div class="col-4">
+				<div class="text-center border p-4 shadow-sm">
+					<div class="fw-bold fs-4 mb-3">
                         <span>Time :- &nbsp;</span><span id="timer">--:--</span>
                     </div>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <main>
-        <div class="container-fluid">
-            <div class="row text-center shadow-sm mt-2 mx-1 py-3 border">
-                <div class="col fw-bold fs-4"><span>Exam Name: <%=ex.getExamName() %> </span></div>
-                <div class="col fw-bold fs-4"><span>Total Marks: <%=ex.getNoOfQues()*ex.getPmarks() %></span></div>
-                <div class="col fw-bold fs-4"><span>Positive Marking: <%=ex.getPmarks() %> </span></div>
-                <div class="col fw-bold fs-4"><span>Negative Marking: <%=ex.getNmarks() %> </span></div>
-            </div>
-        </div>
+					<div class="row text-white fs-5 mb-4">
+						<div class="col" style="background-color: #dc3545;">Visited
+						</div>
+						<div class="col" style="background-color: #198754;">
+							Submitted</div>
+					</div>
+					<form action="Save_result" method="post">
+						<%
+							for (int i = 0; i < aq.size(); i++) {
+						%>
+						<input type="hidden" name="user-answers" id="ans<%=i + 1%>" /> <a
+							id="qBtn<%=i + 1%>" onclick="gotoQuestion(<%=i + 1%>)"
+							class="btn border shadow-sm btn-light"><%=i + 1%></a>
 
-        <div class="container-fluid">
-            <div class="row mx-1 mt-3">
-                <div class="col-8 border p-4 shadow-sm">
-                    <div class="ques fs-5">
-                        Q<span id="questionNo">1</span>. <span id="question"></span>
-                    </div>
-                    <div class="option-container">
-                        <div class="my-3">
-                            1. <label>
-                                <input class="form-check-input" type="radio" name="option" value="1" />
-                                <span id="text-op1"></span>
-                            </label>
-                        </div>
-                        <div class="my-3">
-                            2. <label>
-                                <input class="form-check-input" type="radio" name="option" value="2" />
-                                <span id="text-op2"></span>
-                            </label>
-                        </div>
-                        <div class="my-3">
-                            3. <label>
-                                <input class="form-check-input" type="radio" name="option" value="3" />
-                                <span id="text-op3"></span>
-                            </label>
-                        </div>
-                        <div class="my-3">
-                            4. <label>
-                                <input class="form-check-input" type="radio" name="option" value="4" />
-                                <span id="text-op4"></span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row text-center">
-                        <div class="col">
-                            <a onclick="saveAnswer()" class="btn btn-primary">Save</a>
-                        </div>
-                        <div class="col">
-                            <a onclick="gotoQuestion(currentQues-1)"
-                                class="btn btn-primary">Previous</a></div>
-                        <div class="col">
-                            <a onclick="gotoQuestion(currentQues+1)" class="btn btn-primary">Next</a>
-                        </div>
-                    </div>
-                    <div class="fw-bold " id="choice"></div>
-                </div>
-                <div class="col-4">
-                    <div class="text-center border p-4 shadow-sm">
-                        <div class="row text-white fs-5 mb-4">
-                            <div class="col" style="background-color: #dc3545;">
-                                Visited
-                            </div>
-                            <div class="col" style="background-color: #198754;">
-                                Submitted
-                            </div>
-                        </div>
-                        <form action="Save_result" method="post">
-                            <%for(int i=0;i<aq.size();i++){%>
-                             <input type="hidden" name="user-answers" id="ans<%= i+1%>"/>
-                            <a id="qBtn<%= i+1%>" onclick="gotoQuestion(<%= i+1%>)" class="btn border shadow-sm btn-light"><%= i+1%></a>
-    	
-                           <% }
-                            %>
-                            		
-                           
-                            <br>
-                            <button id="submitbutton" type="submit" name="action"
-                                class="btn text-white mt-3"
-                                style="background-image: linear-gradient(135deg, var(--themeColor1) 0%, var(--themeColor2) 100%);">Submit
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-    
-    <footer class="text-center text-white py-2">
-        &copy; 2021 MDEC All Rights Reserved.
-    </footer>
+						<%
+							}
+						%>
 
 
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+						<br>
+						<button id="submitbutton" type="submit" name="action"
+							class="btn text-white bg-themeColor2 mt-3">Submit
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	</main>
 
-        <script type="text/javascript">
+	<%@ include file="partials/footer.jsp"%>
+
+
+	<!-- Bootstrap Bundle with Popper -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+
+	<script type="text/javascript">
             function Question (ques,op1,op2,op3,op4,status){
                 this.ques = ques;
                 this.op1 = op1;
@@ -161,19 +164,17 @@ ArrayList<Question> aq = (ArrayList<Question>)session.getAttribute("examques");
                 this.status = status;
             }
             var questionList = [];
-            <%for(int i=0;i<aq.size();i++){
-            	 Question q = aq.get(i);
-            %>
+            <%for (int i = 0; i < aq.size(); i++) {
+				Question q = aq.get(i);%>
            
-            questionList.push(new Question("<%=q.getQues() %>","<%=q.getOp1() %>","<%=q.getOp2() %>","<%=q.getOp3() %>","<%=q.getOp4()%>",0));
+            questionList.push(new Question("<%=q.getQues()%>","<%=q.getOp1()%>","<%=q.getOp2()%>","<%=q.getOp3()%>","<%=q.getOp4()%>",0));
             
-            <%
-            }%>
+            <%}%>
             
            
             function gotoQuestion(q)
             {
-            	if(q<1 || q><%= ex.getNoOfQues()%>) {
+            	if(q<1 || q><%=ex.getNoOfQues()%>) {
             		
             		return ;
             	}
@@ -243,8 +244,8 @@ ArrayList<Question> aq = (ArrayList<Question>)session.getAttribute("examques");
 
     gotoQuestion(1);
 </script>
-<script type="text/javascript">
-    var time = <%=ex.getDtime()*60 %>;
+	<script type="text/javascript">
+    var time = <%=ex.getDtime() * 60%>;
     
     function convertsec(s)
     {

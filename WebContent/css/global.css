@@ -1,6 +1,14 @@
 :root {
-    --themeColor1: #1b9ce7;
-    --themeColor2: #005380;
+    --themeColor1: #212529;
+    --themeColor2: #c55f0b;
+}
+
+.themeColor2 {
+    color: var(--themeColor2);
+}
+
+.bg-themeColor2 {
+    background-color: var(--themeColor2);
 }
 
 body {
@@ -14,9 +22,18 @@ main {
 }
 
 nav {
-    background-image: linear-gradient(90deg, var(--themeColor1) 0%, var(--themeColor2) 100%);
+    background-color: var(--themeColor1);
+}
+
+.navbar-brand, .navbar-nav>li>a, .dropdown-menu>li>a {
+    color: var(--themeColor2);
+}
+
+.navbar-brand:hover, .navbar-nav>li>a:hover, .dropdown-menu>li>a:hover {
+    color: white;
 }
 
 footer {
-    background-color: var(--themeColor2);
+    background-color: var(--themeColor1);
+    color: var(--themeColor2);
 }

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import database.Database;
+import database.Fee;
 
 /**
  * Servlet implementation class Feeadmin_login
@@ -30,7 +31,8 @@ public class Feeadmin_login extends HttpServlet {
 			response.sendRedirect("feeadmin_option.jsp");
 		}
 		else {
-			response.sendRedirect("feeadmin_login.jsp");
+			request.setAttribute("errMsg", "Invalid Credentials!");
+			request.getRequestDispatcher("feeadmin_login.jsp").forward(request, response);
 		}
 	}
 

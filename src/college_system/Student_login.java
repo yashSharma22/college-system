@@ -11,26 +11,30 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import database.Database;
+import database.Student;
 
 /**
  * Servlet implementation class Student_login
  */
 @WebServlet("/Student_login")
 public class Student_login extends HttpServlet {
-	
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String email,pass;
-		email=request.getParameter("email");
-		pass=request.getParameter("pass");
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String pass;
+		int sid = Integer.parseInt(request.getParameter("sid"));
+		pass = request.getParameter("pass");
 		ServletContext sc = getServletContext();
-		Database db = (Database)sc.getAttribute("dob");
-		int sid = db.studentlogin(email,pass);
-		if(sid!=0) {
-			Student stu= db.studentDetail(sid);
+		Database db = (Database) sc.getAttribute("dob");
+		sid = db.studentlogin(sid, pass);
+		if (sid != 0) {
+			Student stu = db.studentDetail(sid);
 			HttpSession sse = request.getSession();
 			sse.setAttribute("sdetail", stu);
 			response.sendRedirect("student_option.jsp");
+		} else {
+			request.setAttribute("errMsg", "Invalid Credentials!");
+			request.getRequestDispatcher("student_login.jsp").forward(request, response);
 		}
 	}
 

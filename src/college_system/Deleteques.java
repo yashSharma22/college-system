@@ -8,8 +8,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import database.Database;
+import database.Teacher;
 
 /**
  * Servlet implementation class Deleteques
@@ -17,30 +19,24 @@ import database.Database;
 @WebServlet("/Deleteques")
 public class Deleteques extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Deleteques() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	int examid,qid;
-	examid=Integer.parseInt(request.getParameter("examId"));
-	qid = Integer.parseInt(request.getParameter("qid"));
-	ServletContext sc = getServletContext();
-	Database db = (Database)sc.getAttribute("dob");
-	if(db.deleteQuestio(examid,qid)) {
-		System.out.println("question deleted");
-		response.sendRedirect("update_question.jsp?examId="+examid);
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession se = request.getSession(false);
+		Teacher te = (Teacher) se.getAttribute("tdetail");
+		if (te == null) {
+			response.sendRedirect("teacher_login.jsp");
+			return;
+		}
+		int examid, qid;
+		examid = Integer.parseInt(request.getParameter("examId"));
+		qid = Integer.parseInt(request.getParameter("qid"));
+		ServletContext sc = getServletContext();
+		Database db = (Database) sc.getAttribute("dob");
+		if (db.deleteQuestion(examid, qid)) {
+			System.out.println("question deleted");
+			response.sendRedirect("update_question.jsp?examId=" + examid);
+		}
 	}
-	}
-
-	
 
 }

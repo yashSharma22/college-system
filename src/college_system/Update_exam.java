@@ -16,46 +16,54 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import database.Database;
+import database.Exam;
+import database.Teacher;
 
 /**
  * Servlet implementation class Create_exam
  */
 @WebServlet("/Update_exam")
 public class Update_exam extends HttpServlet {
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession t = request.getSession(false);
-		Teacher te = (Teacher) request.getAttribute("tdetail");
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession se = request.getSession(false);
+		Teacher te = (Teacher) se.getAttribute("tdetail");
 		if(te==null) {
 			response.sendRedirect("teacher_login.jsp");
+			return;
 		}
-	Exam ex = new Exam();
-	ex.setExamName(request.getParameter("examName"));
-	java.util.Date dt = null;
-	
-	try {
-		dt = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("date"));
-		Date d = new Date(dt.getTime());
-		ex.setDate(d);
-		dt = new SimpleDateFormat("HH:mm").parse(request.getParameter("time"));
-		Time ti = new Time(dt.getTime());
-		ex.setTime(ti);
-		System.out.println(ti);
-	} catch (ParseException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}	
-	ex.setDeptid(Integer.parseInt(request.getParameter("deptid")));
-	ex.setNmarks(Integer.parseInt(request.getParameter("nmarks")));
-	ex.setNoOfQues(Integer.parseInt(request.getParameter("noOfQues")));
-	ex.setPmarks(Integer.parseInt(request.getParameter("pmarks")));
-	ex.setDtime(Integer.parseInt(request.getParameter("dtime")));
-	ex.setExamid(Integer.parseInt(request.getParameter("eid")));
-	ServletContext sc = getServletContext();
-	Database db = (Database)sc.getAttribute("dob");
-	if(db.updateExam(ex)) {
-		System.out.println("exam update sucessfully");
-	}
+		Exam ex = new Exam();
+		ex.setExamName(request.getParameter("examName"));
+		java.util.Date dt = null;
+
+		try {
+			dt = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("date"));
+			Date d = new Date(dt.getTime());
+			ex.setDate(d);
+			dt = new SimpleDateFormat("HH:mm").parse(request.getParameter("time"));
+			Time ti = new Time(dt.getTime());
+			ex.setTime(ti);
+			System.out.println(ti);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ex.setDeptid(Integer.parseInt(request.getParameter("deptid")));
+		ex.setNmarks(Integer.parseInt(request.getParameter("nmarks")));
+		ex.setNoOfQues(Integer.parseInt(request.getParameter("noOfQues")));
+		ex.setPmarks(Integer.parseInt(request.getParameter("pmarks")));
+		ex.setDtime(Integer.parseInt(request.getParameter("dtime")));
+		ex.setExamid(Integer.parseInt(request.getParameter("eid")));
+		ServletContext sc = getServletContext();
+		Database db = (Database) sc.getAttribute("dob");
+		if (db.updateExam(ex)) {
+			request.setAttribute("msg", "Exam Updated!");
+			request.setAttribute("link", "teacher_option.jsp");
+			request.setAttribute("bname", "Continue");
+			request.setAttribute("color", "success");
+		}
+		request.getRequestDispatcher("msg.jsp").forward(request, response);
 	}
 
 }

@@ -1,4 +1,4 @@
-package college_system;
+package database;
 
 public class Fee {
 	private int fid;
@@ -6,7 +6,7 @@ public class Fee {
 	public int getFid() {
 		return fid;
 	}
-	public void setFid(int aid) {
+	public void setFid(int fid) {
 		this.fid = fid;
 	}
 	public String getName() {

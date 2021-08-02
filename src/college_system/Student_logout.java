@@ -30,7 +30,7 @@ public class Student_logout extends HttpServlet {
 		HttpSession sse=request.getSession(false);
 		sse.removeAttribute("sdetail");
 		sse.invalidate();
-		response.sendRedirect("student_login.jsp");
+		response.sendRedirect("index.jsp");
 	}
 
 }

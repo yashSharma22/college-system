@@ -31,6 +31,6 @@ public class Teacherlogout extends HttpServlet {
 		HttpSession tl=request.getSession(false);
 		tl.removeAttribute("tdetail");
 		tl.invalidate();
-		response.sendRedirect("teacher_login.jsp");
+		response.sendRedirect("index.jsp");
 }
 }
