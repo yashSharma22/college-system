@@ -2,7 +2,6 @@ package college_system;
 
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,7 +18,8 @@ import database.Student;
  */
 @WebServlet("/Feesubmit")
 public class Feesubmit extends HttpServlet {
-	
+	private static final long serialVersionUID = 1L;
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int amount = Integer.parseInt(request.getParameter("sfee"));
 		HttpSession se = request.getSession(false);//false se purane seddion ko check krta h 
@@ -34,8 +34,7 @@ public class Feesubmit extends HttpServlet {
 		int sid = st.getSid();
 		int rfee = st.getTotalfees() - st.getSubmitedfees();
 		if(amount <= rfee) {
-			ServletContext sc = getServletContext();
-			Database db = (Database)sc.getAttribute("dob");
+			Database db = new Database();
 				if(db.feesubmit(amount+st.getSubmitedfees(),sid))
 				{	
 					request.setAttribute("msg", "Fee Submitted!");

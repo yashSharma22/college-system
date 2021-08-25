@@ -2,7 +2,6 @@ package college_system;
 
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,13 +17,13 @@ import database.Teacher;
  */
 @WebServlet("/Teacher_login")
 public class Teacher_login extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		int tid = Integer.parseInt(request.getParameter("tid"));
 		String pass = request.getParameter("pass");
-		ServletContext sc = getServletContext();
-		Database db = (Database) sc.getAttribute("dob");
+		Database db = new Database();
 		if (db.teacherLogin(tid, pass)) {
 			Teacher te = db.teacherDetail();
 			HttpSession tl = request.getSession();

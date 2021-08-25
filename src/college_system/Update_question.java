@@ -2,7 +2,6 @@ package college_system;
 
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +18,7 @@ import database.Teacher;
  */
 @WebServlet("/Update_question")
 public class Update_question extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -28,8 +28,7 @@ public class Update_question extends HttpServlet {
 			response.sendRedirect("teacher_login.jsp");
 			return;
 		}
-		ServletContext sc = getServletContext();
-		Database db = (Database) sc.getAttribute("dob");
+		Database db = new Database();
 		Question q = new Question();
 		int examId = Integer.parseInt(request.getParameter("examId"));
 		q.setQues(request.getParameter("ques"));

@@ -44,7 +44,7 @@
 			return;
 		}
 
-		Database db = (Database) application.getAttribute("dob");
+		Database db = new Database();
 		Student stu = db.studentDetail(Integer.parseInt(request.getParameter("fsid")));
 		session.setAttribute("studentdetail", stu);
 	%>

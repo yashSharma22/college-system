@@ -2,7 +2,6 @@ package college_system;
 
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +18,7 @@ import database.Teacher;
  */
 @WebServlet("/Add_question")
 public class Add_question extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -35,8 +35,7 @@ public class Add_question extends HttpServlet {
 		q.setOp3(request.getParameter("op3"));
 		q.setOp4(request.getParameter("op4"));
 		q.setCoption(Integer.parseInt(request.getParameter("coption")));
-		ServletContext sc = getServletContext();
-		Database db = (Database) sc.getAttribute("dob");
+		Database db = new Database();
 		if (db.addQues(Integer.parseInt(request.getParameter("examid")), q)) {
 			request.setAttribute("msg", "Question Added!");
 			request.setAttribute("msg2", "Want to Add More?");

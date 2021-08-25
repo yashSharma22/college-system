@@ -2,7 +2,6 @@ package college_system;
 
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,8 +30,7 @@ public class Deleteques extends HttpServlet {
 		int examid, qid;
 		examid = Integer.parseInt(request.getParameter("examId"));
 		qid = Integer.parseInt(request.getParameter("qid"));
-		ServletContext sc = getServletContext();
-		Database db = (Database) sc.getAttribute("dob");
+		Database db = new Database();
 		if (db.deleteQuestion(examid, qid)) {
 			System.out.println("question deleted");
 			response.sendRedirect("update_question.jsp?examId=" + examid);

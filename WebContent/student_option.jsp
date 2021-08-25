@@ -37,7 +37,7 @@
 			return;
 		}
 
-		Database db = (Database) application.getAttribute("dob");
+		Database db = new Database();
 		ArrayList<Exam> lx = db.getOnlineExamLinks(stu.getDeptid(), stu.getSid());
 		ArrayList<Integer> at = db.getStudentAttendance(stu.getSid());
 	%>
@@ -57,7 +57,7 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h4 class="card-title">Attendance</h4>
-						<div class="fs-5 text-center text-muted"><%=at.get(0)%> / <%=at.get(1)%> days <span class="ms-5"><%=(at.get(0)/at.get(1))*100%>%</span></div>
+						<div class="fs-5 text-center text-muted"><%=at.get(0)%> / <%=at.get(1)%> days <span class="ms-5"><%=String.format("%.2f",( (double) at.get(0)/at.get(1))*100)%>%</span></div>
 					</div>
 				</div>
 			</div>

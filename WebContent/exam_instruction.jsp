@@ -41,8 +41,12 @@
 			return;
 		}
 
-		Database db = (Database) application.getAttribute("dob");
+		Database db = new Database();
 		int eid = Integer.parseInt(request.getParameter("eid"));
+		if (db.getOnlineExamStatus(eid, stu.getSid())) {
+			response.sendRedirect("student_option.jsp");
+			return;
+		}
 		Exam ex = db.getOnlineExamDetails(eid);
 		session.setAttribute("examdetails", ex);
 	%>

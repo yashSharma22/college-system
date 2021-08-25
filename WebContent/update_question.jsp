@@ -38,7 +38,7 @@
 			return;
 		}
 
-		Database db = (Database) application.getAttribute("dob");
+		Database db = new Database();
 		ArrayList<Question> arques = db.getAllQuestion(Integer.parseInt(request.getParameter("examId")));
 	%>
 	<jsp:include page="partials/teacherDashboard.jsp">

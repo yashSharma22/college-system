@@ -44,7 +44,7 @@
 			return;
 		}
 
-		Database db = (Database) application.getAttribute("dob");
+		Database db = new Database();
 		Map<Integer, String> m = db.getStudentIdNameByDepartment(te.getDeptid());
 		session.setAttribute("student_Id_List_Attendance", m);
 	%>

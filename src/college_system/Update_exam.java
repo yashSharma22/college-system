@@ -3,11 +3,9 @@ package college_system;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,6 +22,7 @@ import database.Teacher;
  */
 @WebServlet("/Update_exam")
 public class Update_exam extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -55,13 +54,17 @@ public class Update_exam extends HttpServlet {
 		ex.setPmarks(Integer.parseInt(request.getParameter("pmarks")));
 		ex.setDtime(Integer.parseInt(request.getParameter("dtime")));
 		ex.setExamid(Integer.parseInt(request.getParameter("eid")));
-		ServletContext sc = getServletContext();
-		Database db = (Database) sc.getAttribute("dob");
+		Database db = new Database();
 		if (db.updateExam(ex)) {
 			request.setAttribute("msg", "Exam Updated!");
 			request.setAttribute("link", "teacher_option.jsp");
 			request.setAttribute("bname", "Continue");
 			request.setAttribute("color", "success");
+		} else {
+			request.setAttribute("msg", "500! Some Error Occur");
+			request.setAttribute("link", "teacher_option.jsp");
+			request.setAttribute("bname", "Continue");
+			request.setAttribute("color", "danger");
 		}
 		request.getRequestDispatcher("msg.jsp").forward(request, response);
 	}

@@ -35,7 +35,7 @@
                             <div class="col-12 col-md-9 col-lg-9">
                                 <div class="mb-3">
                                     <label for="userId" class="form-label text-uppercase fw-bold">User Id</label>
-                                    <input type="text" name="tid" class="form-control" id="userId"
+                                    <input type="number" name="tid" class="form-control" id="userId"
                                         onfocusout="idvalidation('userId','msg1')">
                                     <div id="msg1" class="error-text">&nbsp;</div>
                                 </div>

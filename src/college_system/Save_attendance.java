@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,8 +28,7 @@ public class Save_attendance extends HttpServlet {
 			response.sendRedirect("teacher_login.jsp");
 			return;
 		}
-		ServletContext sc = getServletContext();
-		Database db = (Database)sc.getAttribute("dob");
+		Database db = new Database();
 		if (db.checkTodayAttendanceStatus(te.getDeptid())) {
 			return;
 		}

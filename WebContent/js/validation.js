@@ -7,8 +7,12 @@ function namevalidation(idname, idmsg, errMsg) {
         m.style.visibility = "Hidden";
         blackcolor(idname);
         return true;
-    }
-    else {
+    } else if (e.value.length > 50) {
+        m.innerHTML = "Max Length 50!";
+        m.style.visibility = "visible";
+        redcolor(idname);
+        return false;
+    } else {
         m.innerHTML = errMsg;
         m.style.visibility = "visible";
         redcolor(idname);
@@ -76,7 +80,7 @@ function idvalidation(idname, idmsg) {
     var e = document.getElementById(idname);
     var m = document.getElementById(idmsg);
 
-    if (e.value.length == 4) {
+    if (e.value.length == 4 && e.value > 0) {
         m.innerHTML = "&nbsp;";
         m.style.visibility = "Hidden";
         blackcolor(idname);
@@ -127,9 +131,8 @@ function mobilevalidation(idname, idmsg) {
 }
 
 function passwordvalidation(idname, idmsg) {
-    /*var p = document.getElementById(idname);
+    var p = document.getElementById(idname);
     var m = document.getElementById(idmsg);
-    var letters = /^[A-Za-z]+$/;
 
     if (p.value.length < 8) {
         m.innerHTML = "Enter atleast 8 Characters !";
@@ -143,18 +146,12 @@ function passwordvalidation(idname, idmsg) {
         redcolor(idname);
         return false;
     }
-    else if (p.value.match(letters)) {
-        m.innerHTML = "Must be AlphaNumeric !";
-        m.style.visibility = "visible";
-        redcolor(idname);
-        return false;
-    }
     else {
         m.innerHTML = "&nbsp;";
         m.style.visibility = "Hidden";
         blackcolor(idname)
         return true;
-    }*/
+    }
     return true;
 }
 

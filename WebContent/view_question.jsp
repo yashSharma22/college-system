@@ -36,8 +36,7 @@
 			return;
 		}
 
-		ServletContext sc = getServletContext();
-		Database db = (Database) sc.getAttribute("dob");
+		Database db = new Database();
 		ResultSet rs = db.selectExam();
 	%>
 

@@ -3,7 +3,6 @@ package college_system;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,8 +34,7 @@ public class Teacher_registration extends HttpServlet {
 		t.setPassword(request.getParameter("pass"));
 		t.setDeptid(Integer.parseInt(request.getParameter("departmentid")));
 		t.setMobileno(request.getParameter("mob"));
-		ServletContext sc = getServletContext();
-		Database db = (Database)sc.getAttribute("dob");
+		Database db = new Database();
 		
 		int sta = db.addTeacher(t);
 		if ( sta == 1 ) {

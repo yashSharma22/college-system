@@ -38,16 +38,20 @@
 			response.sendRedirect("student_login.jsp");
 			return;
 		}
-		
+
 		Exam ex = (Exam) session.getAttribute("examdetails");
+		if (ex == null) {
+			response.sendRedirect("student_option.jsp");
+			return;
+		}
 		ArrayList<Question> aq = (ArrayList<Question>) session.getAttribute("examques");
 	%>
 	<%@ include file="partials/header.jsp"%>
-	
+
 	<script type="text/javascript">
         var currentQues = 1;
     </script>
-	
+
 	<main>
 	<div class="container-fluid">
 		<div class="row text-center shadow-sm mt-2 mx-1 py-3 border">
@@ -113,8 +117,8 @@
 			<div class="col-4">
 				<div class="text-center border p-4 shadow-sm">
 					<div class="fw-bold fs-4 mb-3">
-                        <span>Time :- &nbsp;</span><span id="timer">--:--</span>
-                    </div>
+						<span>Time :- &nbsp;</span><span id="timer">--:--</span>
+					</div>
 					<div class="row text-white fs-5 mb-4">
 						<div class="col" style="background-color: #dc3545;">Visited
 						</div>
@@ -136,8 +140,7 @@
 
 						<br>
 						<button id="submitbutton" type="submit" name="action"
-							class="btn text-white bg-themeColor2 mt-3">Submit
-						</button>
+							class="btn text-white bg-themeColor2 mt-3">Submit</button>
 					</form>
 				</div>
 			</div>
@@ -246,6 +249,9 @@
 </script>
 	<script type="text/javascript">
     var time = <%=ex.getDtime() * 60%>;
+    if(sessionStorage.getItem('time')){
+        time=Number.parseInt(sessionStorage.getItem('time'));
+    }
     
     function convertsec(s)
     {
@@ -259,18 +265,18 @@
     }
     
     var interval=setInterval(countdown,1000);
-    function countdown()
-    {
-        var p=document.getElementById("timer");
-        p.innerHTML=convertsec(time);
-        time=time-1;   
-        
-        if(time==-1)
-        {
-            clearInterval(interval);
-            document.getElementById("submitbutton").click();
-        }
-    }
+    
+    function countdown() {
+    	var p = document.getElementById("timer");
+    	p.innerHTML = convertsec(time);
+    	time = time - 1;
+    	sessionStorage.setItem('time',time.toString());
+    	if (time < 0){ 
+    		sessionStorage.clear();
+    		clearInterval(interval);
+    		document.getElementById("submitbutton").click();
+    	}
+	}
 </script>
 </body>
 </html>

@@ -24,8 +24,7 @@ public class Student_login extends HttpServlet {
 		String pass;
 		int sid = Integer.parseInt(request.getParameter("sid"));
 		pass = request.getParameter("pass");
-		ServletContext sc = getServletContext();
-		Database db = (Database) sc.getAttribute("dob");
+		Database db = new Database();
 		sid = db.studentlogin(sid, pass);
 		if (sid != 0) {
 			Student stu = db.studentDetail(sid);

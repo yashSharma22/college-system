@@ -21,8 +21,19 @@
 </head>
 
 <body>
-    <%@ include file="partials/header.jsp" %>
+	<%
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); //http 1.1
+		response.setHeader("Pragma", "no-cache"); //http1.0
+		response.setHeader("Expires", "0"); //proxies
 
+		Admin adm = (Admin) session.getAttribute("detail");
+		if (adm != null) {
+			response.sendRedirect("admin_option.jsp");
+			return;
+		}
+	%>
+    <%@ include file="partials/header.jsp" %>
+	
     <main id="hero-header-section">
         <div class="container-fluid mt-5">
             <div class="row justify-content-center align-items-center">
@@ -36,7 +47,7 @@
                             <div class="col-12 col-md-9 col-lg-9">
                                 <div class="mb-3">
                                     <label for="userId" class="form-label text-uppercase fw-bold">User Id</label>
-                                    <input type="text" name="aid" class="form-control" id="userId"
+                                    <input type="number" name="aid" class="form-control" id="userId"
                                         onfocusout="idvalidation('userId','msg1')">
                                     <div id="msg1" class="error-text">&nbsp;</div>
                                 </div>

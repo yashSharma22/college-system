@@ -31,8 +31,7 @@ public class Student_registration extends HttpServlet {
 		stu.setTenth(Integer.parseInt(request.getParameter("10%")));
 		stu.setTwelfth(Integer.parseInt(request.getParameter("12%")));
 		stu.setDeptid(Integer.parseInt(request.getParameter("deptid")));
-		ServletContext sc = getServletContext();
-		Database db = (Database) sc.getAttribute("dob");
+		Database db = new Database();
 		int sta = db.addStudent(stu);
 		if ( sta == 1 ) {
 			request.setAttribute("msg", "Registration Successfull!");

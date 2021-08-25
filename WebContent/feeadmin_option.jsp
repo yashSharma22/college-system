@@ -38,7 +38,7 @@
 			return;
 		}
 		
-		Database db = (Database) application.getAttribute("dob");
+		Database db = new Database();
 		Map<Integer, String> m = db.getDepartment();
 	%>
 	<jsp:include page="partials/feeAdminDashboard.jsp">

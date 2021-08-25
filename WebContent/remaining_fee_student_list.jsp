@@ -39,7 +39,7 @@
 			return;
 		}
 
-		Database db = (Database) application.getAttribute("dob");
+		Database db = new Database();
 		ArrayList<Student> as = db
 				.getRemainingFeeStudentsByDepartment(Integer.parseInt(request.getParameter("deptid")));
 	%>

@@ -8,7 +8,7 @@
 		</button>
 		<a
 			class="navbar-brand me-auto ms-lg-5 ms-5 text-uppercase fw-bold fs-3"
-			href=""><%=application.getInitParameter("college-name")%></a>
+			href="./"><%=application.getInitParameter("college-name")%></a>
 	</div>
 </nav>
 <!-- top navigation bar -->

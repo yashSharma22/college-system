@@ -29,7 +29,7 @@
 		response.setHeader("Pragma", "no-cache"); //http1.0
 		response.setHeader("Expires", "0"); //proxies
 
-		Database db = (Database) application.getAttribute("dob");
+		Database db = new Database();
 		Map<Integer, String> m = db.getDepartment();
 	%>
 

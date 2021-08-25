@@ -3,7 +3,6 @@ package college_system;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,7 +20,8 @@ import database.Student;
  */
 @WebServlet("/Prepare_onlineexam")
 public class Prepare_onlineexam extends HttpServlet {
-	
+	private static final long serialVersionUID = 1L;
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession se = request.getSession(false);//false se purane seddion ko check krta h 
 		Student st = (Student) se.getAttribute("sdetail");
@@ -29,9 +29,12 @@ public class Prepare_onlineexam extends HttpServlet {
 			response.sendRedirect("student_login.jsp");
 			return;
 		}
-		ServletContext sc = getServletContext();
-		Database db = (Database)sc.getAttribute("dob");
+		Database db = new Database();
 		Exam ex = (Exam) se.getAttribute("examdetails");
+		if (ex == null) {
+			response.sendRedirect("student_option.jsp");
+			return;
+		}
 		ArrayList<Question> qal = db.getExamQuestion(ex);
     
 		se.setAttribute("examques", qal);//it set different ques for different student

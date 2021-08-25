@@ -38,7 +38,7 @@
 			return;
 		}
 
-		Database db = (Database) application.getAttribute("dob");
+		Database db = new Database();
 		ArrayList<Result> lx = db.getStudentResult(stu.getSid());
 	%>
 	<jsp:include page="partials/studentDashboard.jsp">
@@ -76,7 +76,7 @@
 						<td><%=re.getNmarks()%></td>
 						<td><%=re.getCorrectans()%></td>
 						<td><%=re.getIncorrectans()%></td>
-						<td><%=(((double)re.getCorrectans()*re.getPmarks()-re.getIncorrectans()*re.getNmarks())/(re.getNoOfQues()*re.getPmarks()))*100%>%</td>
+						<td><%=String.format("%.2f", (((double)re.getCorrectans()*re.getPmarks()-re.getIncorrectans()*re.getNmarks())/(re.getNoOfQues()*re.getPmarks()))*100)%>%</td>
 					<tr>
 						<%
 							}

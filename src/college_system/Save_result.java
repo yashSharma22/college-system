@@ -1,10 +1,8 @@
 package college_system;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,11 +20,8 @@ import database.Student;
  */
 @WebServlet("/Save_result")
 public class Save_result extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession sse = request.getSession(false);// false se purane seddion ko check krta h
@@ -35,10 +30,15 @@ public class Save_result extends HttpServlet {
 			response.sendRedirect("student_login.jsp");
 			return;
 		}
-		ServletContext sc = getServletContext();
-		Database db = (Database) sc.getAttribute("dob");
 		Exam ex = (Exam) sse.getAttribute("examdetails");
+		if (ex == null) {
+			response.sendRedirect("student_option.jsp");
+			return;
+		}
+		Database db = new Database();
 		ArrayList<Question> aq = (ArrayList<Question>) sse.getAttribute("examques");
+		sse.removeAttribute("examdetails");
+		sse.removeAttribute("examques");
 		String allans[] = request.getParameterValues("user-answers");
 		int canscount = 0, incanscount = 0;
 		for (int i = 0; i < aq.size(); i++) {

@@ -38,8 +38,8 @@
 			response.sendRedirect("admin_login.jsp");
 			return;
 		}
-		
-		Database db = (Database)application.getAttribute("dob");
+
+		Database db = new Database();
 		ArrayList<Exam> arexams = db.getUpcomingOnlineExams();
 	%>
 	<jsp:include page="partials/adminDashboard.jsp">
@@ -79,7 +79,7 @@
 		</div>
 		<div class="mt-5">
 			<h3 class="text-center">Upcoming Exams</h3>
-			<table class="table table-striped table-hover m-4">
+			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
 						<th>Exam ID</th>
@@ -94,8 +94,8 @@
 				</thead>
 				<tbody>
 					<%
-					for(int i=0;i<arexams.size();i++){ 
-						Exam e = arexams.get(i);
+						for (int i = 0; i < arexams.size(); i++) {
+							Exam e = arexams.get(i);
 					%>
 					<tr>
 						<th><%=e.getExamid()%></th>
